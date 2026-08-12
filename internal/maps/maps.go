@@ -94,9 +94,6 @@ func MaxKeyByValue(values map[string]int) (string, bool) {
 func BuildUserIndex(users []User) map[int]User {
 	// TODO: построить индекс пользователей по ID.
 	// Если один ID встречается несколько раз, в результате должен остаться последний пользователь.
-	if len(users) == 0 {
-		return nil
-	}
 	idMap := make(map[int]User, len(users))
 	for _, user := range users {
 		idMap[user.ID] = user
@@ -112,9 +109,6 @@ func GroupActiveUsersByCity(users []User) map[string][]User {
 		if user.Active {
 			cityMap[user.City] = append(cityMap[user.City], user)
 		}
-	}
-	if len(cityMap) == 0 {
-		return nil
 	}
 	return cityMap
 }
@@ -145,7 +139,7 @@ func BuildInventory(products []Product) map[string]Product {
 func ReserveStock(inventory map[string]Product, sku string, count int) bool {
 	// TODO: уменьшить остаток существующего товара на положительное count, если товара хватает.
 	// При неуспехе вернуть false и не менять склад.
-	if count < 0 {
+	if count <= 0 {
 		return false
 	}
 
@@ -166,7 +160,7 @@ func ReserveStock(inventory map[string]Product, sku string, count int) bool {
 func Restock(inventory map[string]*Product, sku string, count int) bool {
 	// TODO: увеличить остаток товара, хранящегося в map как указатель.
 	// Ключ должен существовать, указатель не должен быть nil, count должен быть положительным.
-	if count < 0 {
+	if count <= 0 {
 		return false
 	}
 
