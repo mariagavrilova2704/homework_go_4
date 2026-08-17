@@ -177,9 +177,9 @@ func LowStockSKUs(inventory map[string]Product, limit int) []string {
 	// TODO: вернуть SKU товаров с остатком не больше limit.
 	// Результат должен иметь стабильный алфавитный порядок.
 	sku := make([]string, 0, len(inventory))
-	for _, v := range inventory {
+	for skuName, v := range inventory {
 		if v.Quantity <= limit {
-			sku = append(sku, v.SKU)
+			sku = append(sku, skuName)
 		}
 	}
 	slices.Sort(sku)
