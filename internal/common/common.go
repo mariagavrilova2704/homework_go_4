@@ -142,3 +142,5 @@ func ApplyUserEvents(
 
 	return users, active
 }
+
+//коммент для проверки
