@@ -53,7 +53,7 @@ type Product struct {
 
 ---
 
-# 02_methods — value receiver, pointer receiver и инварианты
+~~# 02_methods — value receiver, pointer receiver и инварианты~~
 
 ## Типы и ошибки раздела
 
@@ -94,7 +94,7 @@ type Cart struct {
 
 ---
 
-# 03_structs — структуры в map, embedding и память
+~~# 03_structs — структуры в map, embedding и память~~
 
 ## Типы раздела
 
