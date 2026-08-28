@@ -41,35 +41,43 @@ func ApplyOperations(accounts map[int]*methods.Account, operations []Operation) 
 			continue
 		}
 
-		if account.Active == false {
-			result.Errors = append(result.Errors, "account "+strconv.Itoa(operation.AccountID)+": inactive account")
-			continue
-		}
-
+		var err error
 		switch operation.Kind {
 
 		case "deposit":
-			if operation.Amount <= 0 {
-				result.Errors = append(result.Errors, "account "+strconv.Itoa(operation.AccountID)+": invalid amount")
-				continue
+			err = account.Deposit(operation.Amount)
+			if err != nil {
+				switch err {
+				case methods.ErrNilAccount:
+					result.Errors = append(result.Errors, "account "+strconv.Itoa(operation.AccountID)+": not found")
+				case methods.ErrInactive:
+					result.Errors = append(result.Errors, "account "+strconv.Itoa(operation.AccountID)+": inactive account")
+				case methods.ErrInvalidAmount:
+					result.Errors = append(result.Errors, "account "+strconv.Itoa(operation.AccountID)+": invalid amount")
+				default:
+					result.Errors = append(result.Errors, "account "+strconv.Itoa(operation.AccountID)+": "+err.Error())
+				}
 			}
-			account.Balance += operation.Amount
 
 		case "withdraw":
-			if operation.Amount < 0 {
-				result.Errors = append(result.Errors, "account "+strconv.Itoa(operation.AccountID)+": invalid amount")
-				continue
+			err = account.Withdraw(operation.Amount)
+			if err != nil {
+				switch err {
+				case methods.ErrNilAccount:
+					result.Errors = append(result.Errors, "account "+strconv.Itoa(operation.AccountID)+": not found")
+				case methods.ErrInactive:
+					result.Errors = append(result.Errors, "account "+strconv.Itoa(operation.AccountID)+": inactive account")
+				case methods.ErrInvalidAmount:
+					result.Errors = append(result.Errors, "account "+strconv.Itoa(operation.AccountID)+": invalid amount")
+				case methods.ErrInsufficientFunds:
+					result.Errors = append(result.Errors, "account "+strconv.Itoa(operation.AccountID)+": insufficient funds")
+				default:
+					result.Errors = append(result.Errors, "account "+strconv.Itoa(operation.AccountID)+": "+err.Error())
+				}
 			}
-			if account.Balance < operation.Amount {
-				result.Errors = append(result.Errors, "account "+strconv.Itoa(operation.AccountID)+": insufficient funds")
-				continue
-			}
-			account.Balance -= operation.Amount
 
 		default:
 			result.Errors = append(result.Errors, "account "+strconv.Itoa(operation.AccountID)+": unknown operation \""+operation.Kind+"\"")
-			continue
-
 		}
 
 	}
